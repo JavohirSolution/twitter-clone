@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import LoginModal from '../modals/login-modal';
 import RegisterModal from '../modals/register-modal';
 import useRegisterModal from '@/hooks/useRegisterModal';
@@ -12,8 +12,17 @@ import { FcGoogle } from "react-icons/fc";
 import { AiFillGithub } from "react-icons/ai";
 
 const Auth = () => {
-    const loginModal = useLoginModal();
     const registerModal = useRegisterModal();
+    const loginModal = useLoginModal();
+
+    const onOpenRegisterModal = useCallback(() => {
+        registerModal.onOpen()
+    }, [registerModal]);
+
+    const onOpenLoginModal = useCallback(() => {
+        loginModal.onOpen()
+    }, [loginModal]);
+
     return (
         <div className='h-[100vh] box-border'>
             <RegisterModal />
@@ -58,19 +67,21 @@ const Auth = () => {
                                 fullwidth
                                 secondary
                             />
-                            <div className="flex items-center justify-center">
-                                <div className="h-px bg-gray-700 w-1/2" />
+                            <div className="flex items-center md:justify-center">
+                                <div className="h-px bg-gray-700 md:w-1/2 w-1/3" />
                                 <p className="mx-4">or</p>
-                                <div className="h-px bg-gray-700 w-1/2" />
+                                <div className="h-px bg-gray-700 md:w-1/2 w-1/3" />
                             </div>
                             <Button
                                 label="Create an account"
                                 fullwidth
+                                onClick={onOpenRegisterModal}
                             />
-                            <p className='text-xs text-slate-500'>By signing up, you agree to the <span className='text-sky-500'>Terms of Service</span> and <span className='text-sky-500'>Privacy Policy</span>, including <span className='text-sky-500'>Cookie Use.</span></p>
+                            <p className='text-xs text-slate-500 w-96'>By signing up, you agree to the <span className='text-sky-500'>Terms of Service</span> and <span className='text-sky-500'>Privacy Policy</span>, including <span className='text-sky-500'>Cookie Use.</span></p>
                             <div className='flex flex-col gap-4'>
                                 <h1 className='mt-8'>Already have an account?</h1>
                                 <Button
+                                    onClick={onOpenLoginModal}
                                     label={
                                         "Sign in"
                                     }
@@ -79,6 +90,8 @@ const Auth = () => {
                                     fullwidth
                                 />
                             </div>
+
+
                         </div>
                     </div>
                 </div>
