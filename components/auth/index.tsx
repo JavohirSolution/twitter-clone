@@ -11,6 +11,8 @@ import Button from '../ui/button';
 import { FcGoogle } from "react-icons/fc";
 import { AiFillGithub } from "react-icons/ai";
 
+import { signIn } from "next-auth/react"
+
 const Auth = () => {
     const registerModal = useRegisterModal();
     const loginModal = useLoginModal();
@@ -35,7 +37,7 @@ const Auth = () => {
                     height={450}
                     className='justify-self-center hidden md:block'
                 />
-                <div className='text-white flex flex-col gap-6 justify-center h-full md:m-0 ml-9 mr-4'>
+                <div className='text-white flex flex-col gap-6 justify-center h-screen'>
                     <div className='block md:hidden'>
                         <Image src={"/images/twitter-x.png"}
                             alt='Twitter X Images'
@@ -43,11 +45,12 @@ const Auth = () => {
                             height={60}
                         />
                     </div>
-                    <h1 className='md:text-7xl text-5xl font-bold'>Happening now</h1>
-                    <div className='w-full flex flex-col md:w-[60%]'>
+                    <h1 className='md:text-7xl text-5xl font-bold mt-4'>Happening now</h1>
+                    <div className='w-full flex flex-col '>
                         <h2 className='font-bold text-3xl mb-4'>Join today.</h2>
-                        <div className='flex flex-col space-y-2 w-[500px] md:w-96 mt-6'>
+                        <div className='flex flex-col space-y-2 w-full md:w-[400px] mt-6'>
                             <Button
+                                onClick={() => signIn("google")}
                                 label={
                                     <div className="flex gap-2 items-center justify-center">
                                         <FcGoogle className='text-2xl' />
@@ -58,6 +61,7 @@ const Auth = () => {
                                 fullwidth
                             />
                             <Button
+                                onClick={() => signIn("github")}
                                 label={
                                     <div className="flex gap-2 items-center justify-center">
                                         <AiFillGithub className='text-2xl' />

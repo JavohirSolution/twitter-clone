@@ -14,7 +14,7 @@ import useLoginModal from "@/hooks/useLoginModal";
 import axios from "axios";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
-
+import { signIn } from "next-auth/react";
 
 export default function RegisterModal() {
 
@@ -29,7 +29,12 @@ export default function RegisterModal() {
     loginModal.onOpen();
   }, [registerModal, loginModal]);
 
-  const bodyContent = step === 1 ? <RegisterStep1 setData={setData} setStep={setStep} /> : <RegisterStep2 data={data} />;
+  const bodyContent =
+    step === 1 ? (
+      <RegisterStep1 setData={setData} setStep={setStep} />)
+      : (
+        <RegisterStep2 data={data} />
+      );
 
   const footer = (
     <div className="text-slate-500 mt-7 pb-10">Already have an account? <span className="text-sky-500 text-xl cursor-pointer hover:underline font-bold" onClick={onToggle}>Sign in</span></div>
@@ -140,6 +145,10 @@ function RegisterStep2({ data }: { data: { email: string, name: string } }) {
     try {
       const { data: response } = await axios.post("/api/auth/register?step=2", { ...data, ...values });
       if (response.success) {
+        signIn("credentials", {
+          email: data.email,
+          password: values.password
+        })
         registerModal.onClose()
       }
     } catch (error: any) {

@@ -30,7 +30,7 @@ const Button = ({
       onClick={onClick}
       className={cn(
         "bg-white rounded-full font-semibold transition hover:opacity-80 disabled:opacity-70 disabled:cursor-not-allowed",
-        fullwidth ? "md:w-full w-[400px]" : "w-fit",
+        fullwidth ? "w-full" : "w-fit",
         secondary ? "bg-white text-black" : "bg-sky-500 text-white",
         large ? "text-xl px-5 py-3" : "text-md px-4 py-4",
         outline
