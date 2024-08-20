@@ -1,5 +1,5 @@
 import useLoginModal from '@/hooks/useLoginModal'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import Modal from '../ui/modal'
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
@@ -9,10 +9,15 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from '@/lib/validation';
 import useRegisterModal from '@/hooks/useRegisterModal';
+import axios from 'axios';
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 
 const LoginModal = () => {
     const loginModal = useLoginModal()
     const registerModal = useRegisterModal()
+
+    const [error, setError] = useState("")
 
     const onToggle = useCallback(() => {
         loginModal.onClose();
@@ -27,8 +32,19 @@ const LoginModal = () => {
         },
     });
 
-    function onSubmit(values: z.infer<typeof loginSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof loginSchema>) {
+        try {
+            const { data } = await axios.post("/api/auth/login", values);
+            if (data.success) {
+                loginModal.onClose()
+            }
+        } catch (error: any) {
+            if (error.response.data.error) {
+                setError(error.response.data.error);
+            } else {
+                setError("Something went wrong. Please try again later.");
+            }
+        }
     }
     const { isSubmitting } = form.formState
 
@@ -39,6 +55,13 @@ const LoginModal = () => {
     const bodyContent = (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
+                {error && (
+                    <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                )}
                 <FormField
                     control={form.control}
                     name="email"

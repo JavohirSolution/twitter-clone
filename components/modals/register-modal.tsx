@@ -11,6 +11,9 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form"
 import { Input } from "../ui/input";
 import Button from "../ui/button";
 import useLoginModal from "@/hooks/useLoginModal";
+import axios from "axios";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 
 
 export default function RegisterModal() {
@@ -26,9 +29,7 @@ export default function RegisterModal() {
     loginModal.onOpen();
   }, [registerModal, loginModal]);
 
-
-
-  const bodyContent = step === 1 ? <RegisterStep1 setData={setData} setStep={setStep} /> : <RegisterStep2 />;
+  const bodyContent = step === 1 ? <RegisterStep1 setData={setData} setStep={setStep} /> : <RegisterStep2 data={data} />;
 
   const footer = (
     <div className="text-slate-500 mt-7 pb-10">Already have an account? <span className="text-sky-500 text-xl cursor-pointer hover:underline font-bold" onClick={onToggle}>Sign in</span></div>
@@ -44,6 +45,7 @@ export default function RegisterModal() {
   />
 }
 
+// Register 1 
 function RegisterStep1({
   setData,
   setStep
@@ -51,6 +53,8 @@ function RegisterStep1({
   setData: Dispatch<SetStateAction<{ name: string, email: string }>>;
   setStep: Dispatch<SetStateAction<number>>
 }) {
+  const [error, setError] = useState("")
+
   const form = useForm<z.infer<typeof registerStep1Schema>>({
     resolver: zodResolver(registerStep1Schema),
     defaultValues: {
@@ -59,15 +63,34 @@ function RegisterStep1({
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerStep1Schema>) {
-    setData(values)
-    setStep(2)
+  async function onSubmit(values: z.infer<typeof registerStep1Schema>) {
+    try {
+      const { data } = await axios.post("/api/auth/register?step=1", values);
+      if (data.success) {
+        setData(values)
+        setStep(2)
+      }
+    } catch (error: any) {
+      if (error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
+    }
   }
 
   const { isSubmitting } = form.formState
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
         <h3 className="text-3xl font-semibold text-white">Create an account</h3>
         <FormField
           control={form.control}
@@ -99,7 +122,12 @@ function RegisterStep1({
   )
 }
 
-function RegisterStep2() {
+// Register 2
+function RegisterStep2({ data }: { data: { email: string, name: string } }) {
+  const [error, setError] = useState("")
+
+  const registerModal = useRegisterModal()
+
   const form = useForm<z.infer<typeof registerStep2Schema>>({
     resolver: zodResolver(registerStep2Schema),
     defaultValues: {
@@ -108,8 +136,19 @@ function RegisterStep2() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerStep2Schema>) {
-
+  async function onSubmit(values: z.infer<typeof registerStep2Schema>) {
+    try {
+      const { data: response } = await axios.post("/api/auth/register?step=2", { ...data, ...values });
+      if (response.success) {
+        registerModal.onClose()
+      }
+    } catch (error: any) {
+      if (error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
+    }
   }
   const { isSubmitting } = form.formState
 
@@ -118,7 +157,7 @@ function RegisterStep2() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
         <FormField
           control={form.control}
-          name="password"
+          name="username"
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -130,7 +169,7 @@ function RegisterStep2() {
         />
         <FormField
           control={form.control}
-          name="username"
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormControl>

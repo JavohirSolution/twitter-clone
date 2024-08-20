@@ -24,24 +24,39 @@ function Modal({
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='bg-black px-3 py-1'>
-                <div className="flex items-center justify-between text-white">
-                    <button className="p-1 text-white hover:opacity-70 transition w-fit">
-                        <X size={20} onClick={onClose} />
-                    </button>
-                    <Image
-                        src={"/images/twitter-x.png"}
-                        alt="Twitter x"
-                        width={40}
-                        height={40}
-                        className="ml-16"
-                    />
-                    {step && totalSteps && (
-                        <div className="text-xl font-bold ">
-                            Step {step} of {totalSteps}
+                {step && totalSteps
+                    ? (
+                        <div className="flex items-center justify-between text-white">
+                            <button className="p-1 text-white hover:opacity-70 transition w-fit">
+                                <X size={20} onClick={onClose} />
+                            </button>
+                            <Image
+                                src={"/images/twitter-x.png"}
+                                alt="Twitter x"
+                                width={40}
+                                height={40}
+                                className="ml-16"
+                            />
+                            <div className="text-xl font-bold ">
+                                Step {step} of {totalSteps}
+                            </div>
                         </div>
-                    )}
-
-                </div>
+                    )
+                    : (
+                        <div className="flex items-center text-white">
+                            <button className="p-1 text-white hover:opacity-70 transition w-fit">
+                                <X size={20} onClick={onClose} />
+                            </button>
+                            <Image
+                                src={"/images/twitter-x.png"}
+                                alt="Twitter x"
+                                width={40}
+                                height={40}
+                                className="ml-48"
+                            />
+                        </div>
+                    )
+                }
                 <div className="flex flex-col justify-center">
                     <div className="mt-4 text-white">
                         {body}
