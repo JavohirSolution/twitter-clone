@@ -20,7 +20,7 @@ export default async function RootLayout({
         )
     }
     return (
-        <div className="lg:container h-screen mx-auto lg:max-w-7xl text-white">
+        <div className="lg:container h-screen mx-auto lg:max-w-7xl text-white ">
             <div className="flex">
                 <Sidebar user={JSON.parse(JSON.stringify(session?.currentUser))} />
                 <div className="flex flex-1 border-x-[1px] border-neutral-800 lg:mx-4 ml-1">

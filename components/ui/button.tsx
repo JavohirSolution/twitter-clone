@@ -10,7 +10,8 @@ interface ButtonProps {
   outline?: boolean;
   onClick?: () => void;
   className?: string,
-  border?: boolean
+  border?: boolean,
+  smaller?: boolean
 }
 
 const Button = ({
@@ -22,7 +23,8 @@ const Button = ({
   outline,
   onClick,
   className,
-  border
+  border,
+  smaller
 }: ButtonProps) => {
   return (
     <button
@@ -34,10 +36,11 @@ const Button = ({
         secondary ? "bg-white text-black" : "bg-sky-500 text-white",
         large ? "text-xl px-5 py-3" : "text-md px-4 py-4",
         outline
-          ? "bg-transparent border-slate-600 text-sky-500 hover:bg-slate-800/40"
+          ? "bg-transparent border border-slate-600 text-sky-500 hover:bg-slate-800/40"
           : "",
         border ? "border" : "",
-        className
+        smaller ? "py-1 px-4" : "",
+        className,
       )}
     >
       {label}

@@ -6,7 +6,11 @@ const userSchema = new Schema({
     email: String,
     password: String,
     coverImage: String,
-    profileImage: String
+    profileImage: String,
+    bio: String,
+    location: String,
+    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
 }, { timestamps: true });
 
 const User = models.User || model("User", userSchema);

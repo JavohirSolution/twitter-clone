@@ -1,3 +1,6 @@
+import { ReactNode } from "react";
+import { number } from "zod";
+
 export interface IUser {
     createdAt: Date;
     username: string;
@@ -14,4 +17,15 @@ export interface IUser {
     hasNewNotifications: boolean;
     notifications: string[];
     isFollowing: boolean;
+}
+
+export interface Post {
+    _id: string;
+    body: string;
+    user: IUser;
+    likes: number;
+    comments: number;
+    updatedAt: string;
+    createdAt: string;
+    hasLiked: boolean;
 }

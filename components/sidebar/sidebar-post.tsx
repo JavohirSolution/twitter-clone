@@ -7,7 +7,7 @@ const SideBarPost = () => {
         <>
             <Link href={"/"} className='w-full' >
                 {/* MOBILE VERSION */}
-                <div className='w-fit flex lg:hidden bg-sky-500 p-6 items-center justify-center rounded-full hover:opacity-90 cursor-pointer'>
+                <div className='w-fit flex lg:hidden bg-sky-500 p-6 mx-auto items-center justify-center rounded-full hover:opacity-90 cursor-pointer'>
                     <button><Feather /></button>
                 </div>
 
